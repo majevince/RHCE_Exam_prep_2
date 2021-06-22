@@ -10,8 +10,8 @@
 
     - name: " confifure cronie for schedule tasks "
       cron:
-        name: yum autoupdate
-        minute: "1"
+        name: "run date append time"
+        hour: "1"
         user: automation
         job: "date >> /var/log/time.log "
         cron_file: /etc/ansible_cron

@@ -1,0 +1,8 @@
+---
+- hosts: database
+  become: true
+  tasks:
+    - name: "  configure mysql-community repository"
+      template:
+        src: templates/mysql_repo.j2
+        dest: /etc/yum.repos.d/mysql-community.repo
