@@ -1,0 +1,13 @@
+---
+- hosts: all
+  become : true
+  vars_files:
+    - vars/user_list.yml
+    - secret.yml
+  tasks:
+    - name: " to delete existing users "
+      user:
+        name: "{{ item.username }}"
+        state: absent
+      with_items:
+      - "{{ users }}"

@@ -1,0 +1,72 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - secret.yml
+    -  vars/user_list.yml
+
+  tasks:
+    - name: "create group called wheel"
+      group:
+        name: wheel
+        state: present 
+    - name: "cretae user account for hosts in webservers group"
+
+      user:
+        name: "{{item.username}}"
+        uid: "{{item.uid}}"
+        password:  "{{ user_password | password_hash('sha512') }}"
+        shell: /bin/bash
+        state: present
+      when: inventory_hostname in  groups['webservers']
+      with_items:
+        -  "{{users}}"
+
+    - name:  upload ssh keys to the created users in websersers
+      authorized_key:
+        user: "{{item.username}}"
+        state: present
+        key: "{{ lookup('file', '/home/automation/.ssh/id_rsa.pub') }}"
+      when: inventory_hostname in  groups['webservers']
+      with_items:
+        - "{{users}}"
+
+
+    - name: "append wheel group in user created on webserver"
+      user:
+        name: "{{ item.username}}"
+        group: wheel
+        append: yes
+      when: inventory_hostname in groups['webservers']
+      with_items:
+        - "{{users}}"
+
+    - name: "cretae user account for hosts in database group"
+      user:
+        name: "{{item.username}}"
+        uid: "{{item.uid}}"
+        password:  "{{ user_password | password_hash('sha512') }}"
+        shell: /bin/bash
+        state: present
+      when: inventory_hostname in groups['database']
+      with_items:
+        -  "{{ users_1}}"
+
+    - name:  upload ssh keys to the created users in database 
+      authorized_key:
+        user: "{{item.username}}"
+        state: present
+        key: "{{ lookup('file', '/home/automation/.ssh/id_rsa.pub') }}"
+      when: inventory_hostname in  groups['database']
+      with_items:
+        - "{{users_1}}"
+
+
+    - name: "append wheel group in user created on database"
+      user:
+        name: "{{ item.username}}"
+        group: wheel
+        append: yes
+      when: inventory_hostname in groups['database']
+      with_items:
+        - "{{users_1}}"

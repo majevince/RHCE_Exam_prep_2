@@ -1,0 +1,18 @@
+---
+- hosts: proxy
+  become: true
+  tasks:
+    - name: " install cronie service "
+      dnf:
+        name: cronie
+        state: present
+
+
+    - name: " confifure cronie for schedule tasks "
+      cron:
+        name: yum autoupdate
+        minute: "1"
+        user: automation
+        job: "date >> /var/log/time.log "
+        cron_file: /etc/ansible_cron
+

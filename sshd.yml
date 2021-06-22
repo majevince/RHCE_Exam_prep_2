@@ -1,0 +1,9 @@
+- hosts: all
+  become: true 
+  tasks:
+    - name: " configure ssh deamon on all hosts "
+      template:
+        src: templates/sshd.j2
+        dest: /etc/ssh/sshd_config
+        
+
