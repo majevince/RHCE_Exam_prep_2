@@ -1,0 +1,21 @@
+---
+- hosts: proxy
+  become: true
+  tasks:
+    - name: Add a line to a file in  mnt/mysql_backups/database_list.txt
+      lineinfile:
+        path: mnt/mysql_backups/database_list.txt
+        line: 200~dev,test,qa,prod.
+        create: yes
+        state: present
+
+   
+    - name: Create a tar.gz archive mnt/mysql_backups/archive.gz
+      archive:
+        path: mnt/mysql_backups/database_list.txt
+        dest: mnt/mysql_backups/archive.gz
+        format: gz
+
+
+
+  

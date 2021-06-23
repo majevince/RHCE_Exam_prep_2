@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: true
+  tasks:
+    
+    - name: install packages of database group
+      dnf:
+        name:
+          - tcpdump
+          - mailx
+        state: present
+      when: inventory_hostname in groups['proxy']
+    
+    - name: install packages of database group
+      dnf:
+        name:
+          - mailx
+          - lsof
+        state: present
+      when: inventory_hostname in groups['webservers']

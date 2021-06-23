@@ -1,0 +1,25 @@
+---
+- hosts: proxy
+  become: true
+  tasks:
+    - name: create a fact.d directory 
+      file:
+        path: /etc/ansible/facts.d
+        state: directory
+        owner: root
+        group: root
+
+    - name: create a file database.fact      
+      file:
+        path: /etc/ansible/facts.d/database.fact
+        state: touch
+        owner: root
+        group: root
+  
+    - name: Copy using inline content
+      copy:
+        content: |  
+          [database]
+          server_role=mysql
+        dest: /etc/ansible/facts.d/database.fact
+
