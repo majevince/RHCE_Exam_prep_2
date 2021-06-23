@@ -1,0 +1,23 @@
+---
+- hosts: proxy
+  become: true
+  roles:
+    - geerlingguy.haproxy
+
+  tasks:
+    - name: ensure firewall service is running
+      systemd:
+        name: firewalld
+        state: started
+        enabled: yes
+
+
+    - name: open http ports
+      firewalld:
+        port: "{{item}}"
+        immediate: true
+        permanent: yes
+        state: enabled
+      loop:
+        - 443/tcp
+        - 80/tcp

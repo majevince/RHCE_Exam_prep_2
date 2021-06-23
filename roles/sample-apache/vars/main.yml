@@ -1,0 +1,5 @@
+---
+# vars file for sample-apache
+ports:
+  - 443/tcp
+  - 80/tcp

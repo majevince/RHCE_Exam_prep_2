@@ -1,0 +1,38 @@
+---
+# tasks file for sample-apache
+- name: " install apache and dependencies packages"
+  yum:
+    name:
+      - httpd
+      - mod_ssl
+      - php
+    state: present
+
+- name: "enable and start apache deamon"
+  systemd:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name:
+  systemd:
+    name: firewalld
+    state: started
+    enabled: yes
+
+
+
+- name: "add ports on firewall deamon"
+  firewalld:
+    port: "{{item}}"
+    immediate: true
+    permanent: yes
+    state: enabled
+  loop:
+    "{{ports}}"
+
+- name: "configure html file "
+  template:
+    src: templates/index.html.j2 
+    dest: /var/www/html/index.html
+  notify: restart apache

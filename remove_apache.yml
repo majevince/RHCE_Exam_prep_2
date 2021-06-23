@@ -1,0 +1,13 @@
+---
+- hosts: webservers
+  become: true
+  tasks:
+
+    - name: " remove apache packages"
+      dnf:
+        name: 
+          - httpd
+          - php
+          - mod_ssl
+        state: absent
+ 
